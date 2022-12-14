@@ -1,0 +1,31 @@
+#specify docker compose version
+version: "3.7"
+
+#specify services to be used
+services:
+  #specify the first service (item-app)
+  item-app:
+    #defining image repo
+    image: "ghcr.io/inabiel/item-app:v1"
+    #defining port mapping
+    ports:
+      - 80:8080
+    #set item-app to be run after item-db condition is healty (has already been ran)
+    depends_on:
+      item-db:
+        condition: service_healthy
+    #set the restart policy
+    restart: always
+  #specify second service (item-db)
+  item-db:
+    #define image repo
+    image: "mongo:3"
+    #set volume
+    volumes:
+      - app-db:/data/db
+    #restart policy
+    restart: always
+
+#defining volume
+volumes:
+  app-db:
